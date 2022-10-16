@@ -8,7 +8,7 @@ export const FormContainer = styled.form`
   width: 300px;
 `;
 
-export const FormLabel = styled.form`
+export const FormLabel = styled.label`
   display: flex;
   margin-bottom: 20px;
   padding-top: 10px;

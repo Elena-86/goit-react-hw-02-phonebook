@@ -1,5 +1,6 @@
+import PropTypes from 'prop-types';
 import { Component } from 'react';
-import { v4 as uuid } from 'uuid';
+import { nanoid } from 'nanoid';
 
 import {
   FormContainer,
@@ -10,7 +11,7 @@ import {
 
 const INITIAL_STATE = {
   name: '',
-  phone: '',
+  number: '',
 };
 
 class ContactsForm extends Component {
@@ -24,19 +25,19 @@ class ContactsForm extends Component {
   handleContactsFormSubmit = event => {
     event.preventDefault();
 
-    const { name, phone } = this.state;
+    const { name, number } = this.state;
     const { onAdd } = this.props;
 
     const isValidatedContactsForm = this.validateContactsForm();
     if (!isValidatedContactsForm) return;
-    onAdd({ id: uuid(), name, phone });
+    onAdd({ id: nanoid(), name, number });
     this.resetContactsForm();
   };
 
   validateContactsForm = () => {
-    const { name, phone } = this.state;
+    const { name, number } = this.state;
     const { onCheckUnicity } = this.props;
-    if (!name || !phone) {
+    if (!name || !number) {
       alert('Some of required for input fields is empty!');
       return false;
     }
@@ -47,9 +48,12 @@ class ContactsForm extends Component {
   resetContactsForm = () => this.setState(INITIAL_STATE);
 
   render() {
-    const { name, phone } = this.state;
+    const { name, number } = this.state;
     return (
-      <FormContainer onSubmit={this.handleContactsFormSubmit}>
+      <FormContainer
+        autoComplete="off"
+        onSubmit={this.handleContactsFormSubmit}
+      >
         <FormLabel>
           Name
           <FormInput
@@ -64,9 +68,12 @@ class ContactsForm extends Component {
           Number
           <FormInput
             type="tel"
-            name="phone"
+            name="number"
+            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+            required
             placeholder="Enter your phone number"
-            value={phone}
+            value={number}
             onChange={this.handleChangeContactsForm}
           />
         </FormLabel>
@@ -75,5 +82,13 @@ class ContactsForm extends Component {
     );
   }
 }
+
+ContactsForm.propTypes = {
+  handleContactsFormSubmit: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    number: PropTypes.string.isRequired,
+  }),
+};
 
 export default ContactsForm;

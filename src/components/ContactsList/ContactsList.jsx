@@ -1,8 +1,9 @@
+import PropTypes from 'prop-types';
 import { LisContainer, ListItem } from './ContactsList.styled';
-const ContactsListElement = ({ id, name, phone, onDelete }) => {
+const ContactsListElement = ({ id, name, number, onDelete }) => {
   return (
     <ListItem>
-      {name}: {phone} <button onClick={() => onDelete(id)}>Delete</button>
+      {name}: {number} <button onClick={() => onDelete(id)}>Delete</button>
     </ListItem>
   );
 };
@@ -12,9 +13,28 @@ const ContactsList = ({ contacts, onDelete }) => {
   return (
     <LisContainer>
       {contacts.map(contact => (
-        <ContactsListElement {...contact} onDelete={onDelete} />
+        <ContactsListElement
+          key={contact.id}
+          {...contact}
+          onDelete={onDelete}
+        />
       ))}
     </LisContainer>
   );
+};
+
+ContactsListElement.propTypes = {
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  number: PropTypes.string.isRequired,
+  onDelete: PropTypes.func.isRequired,
+};
+
+ContactsList.propTypes = {
+  contacts: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+    }),
+  ),
 };
 export default ContactsList;
